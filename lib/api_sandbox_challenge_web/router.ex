@@ -25,6 +25,15 @@ defmodule ApiSandboxChallengeWeb.Router do
     pipe_through :api
 
     resources "/accounts", AccountController, only: [:index]
+    get "accounts/:id", AccountController, :show
+
+    get "accounts/:id/details", AccountDetailController, :show
+
+    get "accounts/:id/balances", BalanceController, :show
+
+    get "accounts/:id/transactions", TransactionController, :index
+
+    get "accounts/:id/transactions/:transaction_id", TransactionController, :show
 
   end
 

@@ -2,7 +2,7 @@ defmodule ApiSandboxChallenge.Management.Account do
   use Ecto.Schema
   import Ecto.Changeset
 
-  schema "accounts" do
+  embedded_schema do
     field :currency, :string
     field :enrollment_id, :string
     field :institution, :map
