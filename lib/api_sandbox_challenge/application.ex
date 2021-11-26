@@ -9,7 +9,7 @@ defmodule ApiSandboxChallenge.Application do
   def start(_type, _args) do
     children = [
       # Start the Ecto repository
-      ApiSandboxChallenge.Repo,
+      # ApiSandboxChallenge.Repo,
       # Start the Telemetry supervisor
       ApiSandboxChallengeWeb.Telemetry,
       # Start the PubSub system

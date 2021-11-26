@@ -21,9 +21,12 @@ defmodule ApiSandboxChallengeWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", ApiSandboxChallengeWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", ApiSandboxChallengeWeb do
+    pipe_through :api
+
+    resources "/accounts", AccountController, only: [:index]
+
+  end
 
   # Enables LiveDashboard only for development
   #
