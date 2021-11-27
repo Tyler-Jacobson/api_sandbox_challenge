@@ -21,7 +21,7 @@ defmodule ApiSandboxChallengeWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  scope "/api", ApiSandboxChallengeWeb do
+  scope "/", ApiSandboxChallengeWeb do
     pipe_through :api
 
     resources "/accounts", AccountController, only: [:index]
