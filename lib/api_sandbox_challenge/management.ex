@@ -337,31 +337,9 @@ defmodule ApiSandboxChallenge.Management do
       ** (Ecto.NoResultsError)
 
   """
-  def get_transactions!(id, transaction_id) do
+  def get_transaction!(id, transaction_id) do
     # Repo.get!(Transaction, id)
-    %ApiSandboxChallenge.Management.Transaction{
-      account_id: "acc_nmfff743stmo5n80t4000",
-      amount: "50.50",
-      date: "2021-08-11",
-      description: "Uber",
-      details: %{
-        category: "dining",
-        counterparty: %{
-          name: "Uber",
-          type: "organization"
-        },
-        processing_status: "complete"
-      },
-      transaction_id: "txn_nmfo2gtnstmo5n80t4004",
-      links: %{
-        account: "https://api.teller.io/accounts/acc_nmfff743stmo5n80t4000",
-        self:
-          "https://api.teller.io/accounts/acc_nmfff743stmo5n80t4000/transactions/txn_nmfo2gtnstmo5n80t4004"
-      },
-      running_balance: "33648.09",
-      status: "posted",
-      type: "ach"
-    }
+    AccountDataGenerator.get_transaction(id, transaction_id)
   end
 
   @doc """

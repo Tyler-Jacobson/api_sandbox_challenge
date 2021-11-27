@@ -21,7 +21,7 @@ defmodule ApiSandboxChallengeWeb.TransactionController do
   end
 
   def show(conn, %{"id" => id, "transaction_id" => transaction_id}) do
-    transaction = Management.get_transactions!(id, transaction_id)
+    transaction = Management.get_transaction!(id, transaction_id)
     render(conn, "show.json", transaction: transaction)
   end
 
