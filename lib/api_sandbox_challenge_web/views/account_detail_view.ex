@@ -12,7 +12,6 @@ defmodule ApiSandboxChallengeWeb.AccountDetailView do
 
   def render("account_detail.json", %{account_detail: account_detail}) do
     %{
-      id: account_detail.id,
       account_id: account_detail.account_id,
       account_number: account_detail.account_number,
       links: account_detail.links,

@@ -114,18 +114,16 @@ defmodule ApiSandboxChallenge.DataGenerators.AccountDataGenerator do
       },
       last_four: "#{last_four_generated_values.return_value}",
       links: %{
-        balances: "#{base_url}/accounts/#{account_id}/balances",
-        details: "#{base_url}/accounts/#{account_id}/details",
-        self: "#{base_url}/accounts/#{account_id}",
-        transactions: "#{base_url}/accounts/#{account_id}/transactions"
+        balances: "#{base_url}/accounts/#{account_id}/balances?username=test_token_#{seed}",
+        details: "#{base_url}/accounts/#{account_id}/details?username=test_token_#{seed}",
+        self: "#{base_url}/accounts/#{account_id}?username=test_token_#{seed}",
+        transactions: "#{base_url}/accounts/#{account_id}/transactions?username=test_token_#{seed}"
       },
       name: "#{name_generated_values.return_value}",
       subtype: "checking",
       type: "depository"
     }
   end
-
-
 
   def generate_accounts(seed, count, accounts_list \\ []) do
     count = count - 1
@@ -156,31 +154,41 @@ defmodule ApiSandboxChallenge.DataGenerators.AccountDataGenerator do
     end
   end
 
+  def generate_account_details(account_id, seed, index) do
+    account_number = generate_values(seed, 0, index, 10, 11, &list_to_string/1)
+    ach = generate_values(seed, account_number.index, index, 10, 9, &list_to_string/1)
+    base_url = ApiSandboxChallengeWeb.Endpoint.url()
+
+    %ApiSandboxChallenge.Management.AccountDetail{
+      account_id: account_id,
+      account_number: account_number.return_value,
+      links: %{
+        account: "#{base_url}/accounts/#{account_id}?username=test_token_#{seed}",
+        self: "#{base_url}/accounts/#{account_id}/details?username=test_token_#{seed}"
+      },
+      routing_numbers: %{
+        ach: ach.return_value
+      }
+    }
+  end
+
 
   # return all account data for a given seed
   def all_accounts(seed) do
-    number_of_accounts_to_generate = rem((seed + 3), 5)
+    # number_of_accounts_to_generate = rem((seed + 3), 5)
+    number_of_accounts_to_generate = 4
 
     generate_accounts(seed, 4)
   end
 
-  def get_account(id, seed) do
-    index = find_index_by_id(seed, id, 4)
+  def get_account(account_id, seed) do
+    index = find_index_by_id(seed, account_id, 4)
     generate_account(seed, index)
   end
 
-  def get_account_details(id) do
-    %ApiSandboxChallenge.Management.AccountDetail{
-      account_id: "acc_nmfff743stmo5n80t4000",
-      account_number: "891824333836",
-      links: %{
-        account: "https://api.teller.io/accounts/acc_nmfff743stmo5n80t4000",
-        self: "https://api.teller.io/accounts/acc_nmfff743stmo5n80t4000/details"
-      },
-      routing_numbers: %{
-        ach: "581559698"
-      }
-    }
+  def get_account_details(account_id, seed) do
+    index = find_index_by_id(seed, account_id, 4)
+    generate_account_details(account_id, seed, index)
   end
 
   def get_balance_details(id) do
@@ -246,11 +254,32 @@ defmodule ApiSandboxChallenge.DataGenerators.AccountDataGenerator do
     ]
   end
 
-  def get_transaction(id, transaction_id) do
+
+  def get_transaction_index_by_id(account_id, transaction_id, seed) do
+
+  end
+
+  def get_transaction_balance_list() do
+    # calculate transaction amount first, then subtract that from the running balance to get the new running balance
+    # it will be necessary to pass the total between each transaction, it can be returned in the same way that index is returned each time numbers are generated
+  end
+
+  def get_transaction(account_id, transaction_id) do
+
+    # correct_date will be current date minus seconds_in_day * index
+    # count down index while prepending transactions, same as anything else
+    # this will also make it easier to count a total balance
+    # correct_date = DateTime.add(DateTime.utc_now(), -86400 * 90, :second)
+    yesterday = DateTime.add(DateTime.utc_now(), -86400 * 90, :second)
+
+    test = DateTime.utc_now()
+    # x = :calendar.universal_time()
+
+
     %ApiSandboxChallenge.Management.Transaction{
-      account_id: "acc_nmfff743stmo5n80t4000",
+      account_id: account_id,
       amount: "50.50",
-      date: "2021-08-11",
+      date: "#{yesterday}",
       description: "Uber",
       details: %{
         category: "dining",
