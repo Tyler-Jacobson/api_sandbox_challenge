@@ -10,8 +10,15 @@ defmodule ApiSandboxChallenge.Management do
 
   alias ApiSandboxChallenge.DataGenerators.AccountDataGenerator
 
+
+  def parse_token(token) do
+    split_token = String.split(token, "_")
+    seed = Enum.at(split_token, 2)
+    String.to_integer(seed)
+  end
   @doc """
   Returns the list of accounts.
+
 
   ## Examples
 
@@ -19,9 +26,9 @@ defmodule ApiSandboxChallenge.Management do
       [%Account{}, ...]
 
   """
-  def list_accounts do
+  def list_accounts(seed) do
     # Repo.all(Account)
-    AccountDataGenerator.all_accounts()
+    AccountDataGenerator.all_accounts(seed)
   end
 
   @doc """
@@ -38,9 +45,9 @@ defmodule ApiSandboxChallenge.Management do
       ** (Ecto.NoResultsError)
 
   """
-  def get_account!(id) do
+  def get_account!(id, seed) do
     # Repo.get!(Account, id)
-    AccountDataGenerator.get_account(id)
+    AccountDataGenerator.get_account(id, seed)
   end
 
   @doc """

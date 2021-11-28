@@ -1,7 +1,7 @@
 defmodule ApiSandboxChallenge.DataGenerators.AccountDataGenerator do
 
 
-  def generate_values(seed, index, parent_index, number_of_possible_outcomes, count_needed, return_list \\ []) do
+  def generate_values(seed, index, parent_index, number_of_possible_outcomes, count_needed, processing_function, return_list \\ []) do
     rotating_primes = [53, 73, 89, 101, 109, 139, 151, 227, 47, 113, 149, 157, 163]
 
     seed_index = rem(index, 9)
@@ -25,13 +25,15 @@ defmodule ApiSandboxChallenge.DataGenerators.AccountDataGenerator do
 
     # base case to exit recursion. If the number of generated values is equal or greater than the number needed, exit
     if Enum.count(return_list) >= count_needed do
-      %{return_list: return_list, index: index}
+      return_value = processing_function.(return_list)
+      %{return_value: return_value, index: index}
     else
-      generate_values(seed, new_index, parent_index, number_of_possible_outcomes, count_needed, return_list)
+      generate_values(seed, new_index, parent_index, number_of_possible_outcomes, count_needed, processing_function, return_list)
     end
   end
 
-  def get_currency(index) do
+  def get_currency(index_list) do
+    index = Enum.at(index_list, 0)
     currencies = ["USD", "GBP", "EUR", "AUD", "NZD", "SKW"]
     Enum.at(currencies, index)
   end
@@ -55,7 +57,8 @@ defmodule ApiSandboxChallenge.DataGenerators.AccountDataGenerator do
 
 
 
-  def get_instituitons(index) do
+  def get_instituitons(index_list) do
+    index = Enum.at(index_list, 0)
     institutions = ["Chase", "Bank of America", "Wells Fargo", "Citibank", "Capital One"]
     institution_ids = ["chase", "bank_of_america", "wells_fargo", "citibank", "capital_one"]
 
@@ -66,8 +69,6 @@ defmodule ApiSandboxChallenge.DataGenerators.AccountDataGenerator do
 
   def list_to_string(numbers_list, index \\ 0, string \\ "") do
     character = Enum.at(numbers_list, index)
-    IO.puts "This is character #{character}"
-    IO.puts "This is string #{string}"
 
     string = string <> "#{character}"
 
@@ -79,132 +80,93 @@ defmodule ApiSandboxChallenge.DataGenerators.AccountDataGenerator do
     end
   end
 
-  def get_name(index) do
+  def get_name(index_list) do
+    index = Enum.at(index_list, 0)
     names = ["My Checking", "Jimmy Carter", "Ronald Reagan", "George H. W. Bush", "Bill Clinton", "George W. Bush", "Barack Obama", "Donald Trump"]
     Enum.at(names, index)
   end
 
 
 
-
-  # return all account data for a given seed
-  def all_accounts do
-    [
-      %ApiSandboxChallenge.Management.Account{
-        currency: "USD",
-        enrollment_id: "enr_nmf3f7758gpc7b5cd6000",
-        id: "acc_nmfff743stmo5n80t4000",
-        institution: %{
-          institution_id: "citibank",
-          name: "Citibank"
-        },
-        last_four: "3836",
-        links: %{
-          balances: "https://api.teller.io/accounts/acc_nmfff743stmo5n80t4000/balances#{}",
-          details: "https://api.teller.io/accounts/acc_nmfff743stmo5n80t4000/details",
-          self: "https://api.teller.io/accounts/acc_nmfff743stmo5n80t4000",
-          transactions: "https://api.teller.io/accounts/acc_nmfff743stmo5n80t4000/transactions"
-        },
-        name: "My Checking",
-        subtype: "checking",
-        type: "depository"
-      },
-      %ApiSandboxChallenge.Management.Account{
-        currency: "USD",
-        enrollment_id: "enr_nmftg43ewubftwy7z2000",
-        id: "acc_nmfrhsafs84fhzwz7000",
-        institution: %{
-          institution_id: "citibank",
-          name: "Citibank"
-        },
-        last_four: "3836",
-        links: %{
-          balances: "https://api.teller.io/accounts/acc_nmfff743stmo5n80t4000/balances",
-          details: "https://api.teller.io/accounts/acc_nmfff743stmo5n80t4000/details",
-          self: "https://api.teller.io/accounts/acc_nmfff743stmo5n80t4000",
-          transactions: "https://api.teller.io/accounts/acc_nmfff743stmo5n80t4000/transactions"
-        },
-        name: "Timmy's Checking",
-        subtype: "checking",
-        type: "depository"
-      },
-      %ApiSandboxChallenge.Management.Account{
-        currency: "USD",
-        enrollment_id: "enr_nmfuf7ews34fdsfz1000",
-        id: "acc_nmfuksefybsujey3000",
-        institution: %{
-          institution_id: "citibank",
-          name: "Citibank"
-        },
-        last_four: "3836",
-        links: %{
-          balances: "https://api.teller.io/accounts/acc_nmfff743stmo5n80t4000/balances",
-          details: "https://api.teller.io/accounts/acc_nmfff743stmo5n80t4000/details",
-          self: "https://api.teller.io/accounts/acc_nmfff743stmo5n80t4000",
-          transactions: "https://api.teller.io/accounts/acc_nmfff743stmo5n80t4000/transactions"
-        },
-        name: "Jimmy Carter",
-        subtype: "checking",
-        type: "depository"
-      }
-    ]
-
-
+  def generate_id(seed, parent_index) do
+    account_id_generated_values = generate_values(seed, 0, parent_index, 36, 20, &int_list_to_alphanumeric_string/1)
+    _account_id = "acc_#{account_id_generated_values.return_value}"
   end
 
-  def get_account(id) do
+  def generate_account(seed, parent_index) do
+    account_id = generate_id(seed, parent_index)
 
-    # 873462546
-    # 392857372
-    seed = 392857372
-
-    currency_generated_values = generate_values(seed, 0, 1, 6, 1)
-    selected_currency_index = Enum.at(currency_generated_values.return_list, 0)
-    chosen_currency = get_currency(selected_currency_index)
-
-    enrollment_id_generated_values = generate_values(seed, currency_generated_values.index, 1, 36, 20)
-    enrollment_id_string = int_list_to_alphanumeric_string(enrollment_id_generated_values.return_list)
-    enrollment_id = "enr_#{enrollment_id_string}"
-
-    account_id_generated_values = generate_values(seed, enrollment_id_generated_values.index, 1, 36, 20)
-    account_id_string = int_list_to_alphanumeric_string(account_id_generated_values.return_list)
-    account_id = "acc_#{account_id_string}"
-
-    institution_generated_values = generate_values(seed, account_id_generated_values.index, 1, 5, 1)
-    selected_institution_index = Enum.at(institution_generated_values.return_list, 0)
-    returned_institutions = get_instituitons(selected_institution_index)
-    institution_id_string = returned_institutions.institution_id
-    institution_name_string = returned_institutions.institution_name
-
-    last_four_generated_values = generate_values(seed, institution_generated_values.index, 1, 10, 4)
-    last_four_string = list_to_string(last_four_generated_values.return_list)
-
-    name_generated_values = generate_values(seed, last_four_generated_values.index, 1, 8, 1)
-    selected_name_index = Enum.at(name_generated_values.return_list, 0)
-    name_string = get_name(selected_name_index)
+    currency_generated_values = generate_values(seed, 20, parent_index, 6, 1, &get_currency/1)
+    enrollment_id_generated_values = generate_values(seed, currency_generated_values.index, parent_index, 36, 20, &int_list_to_alphanumeric_string/1)
+    institution_generated_values = generate_values(seed, enrollment_id_generated_values.index, parent_index, 5, 1, &get_instituitons/1)
+    last_four_generated_values = generate_values(seed, institution_generated_values.index, parent_index, 10, 4, &list_to_string/1)
+    name_generated_values = generate_values(seed, last_four_generated_values.index, 1, 8, parent_index, &get_name/1)
 
     base_url = ApiSandboxChallengeWeb.Endpoint.url()
-    # https://api.teller.io/accounts/acc_nmfff743stmo5n80t4000/balances
 
     %ApiSandboxChallenge.Management.Account{
-      currency: chosen_currency,
-      enrollment_id: enrollment_id,
+      currency: currency_generated_values.return_value,
+      enrollment_id: "enr_#{enrollment_id_generated_values.return_value}",
       id: account_id,
       institution: %{
-        institution_id: institution_id_string,
-        name: institution_name_string
+        institution_id: "#{institution_generated_values.return_value.institution_id}",
+        name: "#{institution_generated_values.return_value.institution_name}"
       },
-      last_four: last_four_string,
+      last_four: "#{last_four_generated_values.return_value}",
       links: %{
         balances: "#{base_url}/accounts/#{account_id}/balances",
         details: "#{base_url}/accounts/#{account_id}/details",
         self: "#{base_url}/accounts/#{account_id}",
         transactions: "#{base_url}/accounts/#{account_id}/transactions"
       },
-      name: name_string,
+      name: "#{name_generated_values.return_value}",
       subtype: "checking",
       type: "depository"
     }
+  end
+
+
+
+  def generate_accounts(seed, count, accounts_list \\ []) do
+    count = count - 1
+
+    account = generate_account(seed, count)
+    accounts_list = [account | accounts_list]
+
+    if count <= 0 do
+      accounts_list
+    else
+      generate_accounts(seed, count, accounts_list)
+    end
+  end
+
+  def find_index_by_id(index) do
+    index
+  end
+
+  def find_index_by_id(seed, id, count) do
+    count = count - 1
+
+    found_id = generate_id(seed, count)
+
+    cond do
+      found_id == id -> count
+      count <= 0 -> "No account with id #{id} found"
+      true -> find_index_by_id(seed, id, count)
+    end
+  end
+
+
+  # return all account data for a given seed
+  def all_accounts(seed) do
+    number_of_accounts_to_generate = rem((seed + 3), 5)
+
+    generate_accounts(seed, 4)
+  end
+
+  def get_account(id, seed) do
+    index = find_index_by_id(seed, id, 4)
+    generate_account(seed, index)
   end
 
   def get_account_details(id) do

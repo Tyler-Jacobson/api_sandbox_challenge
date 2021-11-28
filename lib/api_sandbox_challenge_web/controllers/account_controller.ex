@@ -6,8 +6,9 @@ defmodule ApiSandboxChallengeWeb.AccountController do
 
   action_fallback ApiSandboxChallengeWeb.FallbackController
 
-  def index(conn, _params) do
-    accounts = Management.list_accounts()
+  def index(conn, params) do
+    seed = Management.parse_token(params["username"])
+    accounts = Management.list_accounts(seed)
     render(conn, "index.json", accounts: accounts)
   end
 
@@ -20,9 +21,9 @@ defmodule ApiSandboxChallengeWeb.AccountController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    IO.inspect id
-    account = Management.get_account!(id)
+  def show(conn, %{"id" => id, "username" => username}) do
+    seed = Management.parse_token(username)
+    account = Management.get_account!(id, seed)
     render(conn, "show.json", account: account)
   end
 
