@@ -8,7 +8,7 @@ defmodule ApiSandboxChallenge.Management do
 
   alias ApiSandboxChallenge.Management.Account
 
-  alias ApiSandboxChallenge.DataGenerators.AccountDataGenerator
+  alias ApiSandboxChallenge.DataGenerators.AccountGenerators
 
 
   def parse_token(token) do
@@ -27,8 +27,7 @@ defmodule ApiSandboxChallenge.Management do
 
   """
   def list_accounts(seed) do
-    # Repo.all(Account)
-    AccountDataGenerator.all_accounts(seed)
+    AccountGenerators.all_accounts(seed)
   end
 
   @doc """
@@ -45,9 +44,8 @@ defmodule ApiSandboxChallenge.Management do
       ** (Ecto.NoResultsError)
 
   """
-  def get_account!(id, seed) do
-    # Repo.get!(Account, id)
-    AccountDataGenerator.get_account(id, seed)
+  def get_account!(account_id, seed) do
+    AccountGenerators.get_account(seed, account_id)
   end
 
 
@@ -67,8 +65,7 @@ defmodule ApiSandboxChallenge.Management do
 
   """
   def get_account_detail!(account_id, seed) do
-    # Repo.get!(AccountDetail, id)
-    AccountDataGenerator.get_account_details(account_id, seed)
+    AccountGenerators.get_account_details(seed, account_id)
   end
 
   @doc """
@@ -85,10 +82,8 @@ defmodule ApiSandboxChallenge.Management do
       ** (Ecto.NoResultsError)
 
   """
-  def get_balance!(id, seed) do
-    # Repo.get!(Balance, id)
-
-    AccountDataGenerator.get_balance_details(id, seed)
+  def get_balance!(account_id, seed) do
+    AccountGenerators.get_balance_details(seed, account_id)
   end
 
   @doc """
@@ -100,9 +95,8 @@ defmodule ApiSandboxChallenge.Management do
       [%Transaction{}, ...]
 
   """
-  def list_transactions!(account_id, seed) do
-    # Repo.all(Transaction)
-    AccountDataGenerator.all_transactions(account_id, seed)
+  def list_transactions!(seed, account_id) do
+    AccountGenerators.all_transactions(account_id, seed)
   end
 
   @doc """
@@ -120,7 +114,6 @@ defmodule ApiSandboxChallenge.Management do
 
   """
   def get_transaction!(id, transaction_id, seed) do
-    # Repo.get!(Transaction, id)
-    AccountDataGenerator.get_transaction(id, transaction_id, seed)
+    AccountGenerators.get_transaction(seed, id, transaction_id)
   end
 end
