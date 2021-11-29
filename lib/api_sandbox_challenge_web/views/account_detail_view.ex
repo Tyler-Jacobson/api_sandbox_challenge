@@ -3,11 +3,11 @@ defmodule ApiSandboxChallengeWeb.AccountDetailView do
   alias ApiSandboxChallengeWeb.AccountDetailView
 
   def render("index.json", %{account_details: account_details}) do
-    %{data: render_many(account_details, AccountDetailView, "account_detail.json")}
+    render_many(account_details, AccountDetailView, "account_detail.json")
   end
 
   def render("show.json", %{account_detail: account_detail}) do
-    %{data: render_one(account_detail, AccountDetailView, "account_detail.json")}
+    render_one(account_detail, AccountDetailView, "account_detail.json")
   end
 
   def render("account_detail.json", %{account_detail: account_detail}) do

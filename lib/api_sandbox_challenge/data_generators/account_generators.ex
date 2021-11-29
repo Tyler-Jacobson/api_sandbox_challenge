@@ -2,12 +2,13 @@ defmodule ApiSandboxChallenge.DataGenerators.AccountGenerators do
 
   alias ApiSandboxChallenge.DataGenerators.GlobalGenerators
 
+  # generates the account_id for use throughout the application
   def generate_account_id(seed, account_index) do
     account_id_generated_values = GlobalGenerators.generate_values(seed, 0, account_index, 36, 20, &GlobalGenerators.int_list_to_alphanumeric_string/1)
     _account_id = "acc_#{account_id_generated_values.return_value}"
   end
 
-  # Transfers -> to detail and transactions
+  # finds the list index of an account by its id. Useful for generating data specific to each account
   def find_account_index_by_id(seed, account_id, count) do
     count = count - 1
     found_id = generate_account_id(seed, count)
@@ -19,12 +20,14 @@ defmodule ApiSandboxChallenge.DataGenerators.AccountGenerators do
     end
   end
 
+  # randomly selects a currency
   def get_currency(index_list) do
     index = Enum.at(index_list, 0)
     currencies = ["USD", "GBP", "EUR", "AUD", "NZD", "SKW"]
     Enum.at(currencies, index)
   end
 
+  # randomly selects an institution + institution_id pair
   def get_instituitons(index_list) do
     index = Enum.at(index_list, 0)
     institutions = ["Chase", "Bank of America", "Wells Fargo", "Citibank", "Capital One"]
@@ -35,15 +38,19 @@ defmodule ApiSandboxChallenge.DataGenerators.AccountGenerators do
     %{institution_id: institution_id, institution_name: institution_name}
   end
 
+  # randomly selects a name
   def get_name(index_list) do
     index = Enum.at(index_list, 0)
     names = ["My Checking", "Jimmy Carter", "Ronald Reagan", "George H. W. Bush", "Bill Clinton", "George W. Bush", "Barack Obama", "Donald Trump"]
     Enum.at(names, index)
   end
 
+  # generates an individual user account based on several parameters
   def generate_account(seed, account_index) do
     account_id = generate_account_id(seed, account_index)
 
+    # calls are made to the generate_values function passing in parameters for the size and number of random generations required.
+    # A processing function is then passed, which will be run inside generate_values to refine the data in to its final state
     currency_generated_values = GlobalGenerators.generate_values(seed, 20, account_index, 6, 1, &get_currency/1)
     enrollment_id_generated_values = GlobalGenerators.generate_values(seed, currency_generated_values.index, account_index, 36, 20, &GlobalGenerators.int_list_to_alphanumeric_string/1)
     institution_generated_values = GlobalGenerators.generate_values(seed, enrollment_id_generated_values.index, account_index, 5, 1, &get_instituitons/1)
@@ -52,6 +59,7 @@ defmodule ApiSandboxChallenge.DataGenerators.AccountGenerators do
 
     base_url = ApiSandboxChallengeWeb.Endpoint.url()
 
+    # the template for the user account is filled in and returned
     %ApiSandboxChallenge.Management.Account{
       currency: currency_generated_values.return_value,
       enrollment_id: "enr_#{enrollment_id_generated_values.return_value}",
@@ -73,6 +81,7 @@ defmodule ApiSandboxChallenge.DataGenerators.AccountGenerators do
     }
   end
 
+  # runs recursively to call the above function until the required number of accounts is generated
   def generate_accounts(seed, count, accounts_list \\ []) do
     count = count - 1
 
@@ -88,12 +97,12 @@ defmodule ApiSandboxChallenge.DataGenerators.AccountGenerators do
 
 
 
-  # return all account data for a given seed
+  # returns all account data for a given seed
   def all_accounts(seed) do
     generate_accounts(seed, GlobalGenerators.total_accounts(seed))
   end
 
-  # return account information for a specific account
+  # returns account information for a specific account
   def get_account(seed, account_id) do
     index = find_account_index_by_id(seed, account_id, GlobalGenerators.total_accounts(seed))
     generate_account(seed, index)
