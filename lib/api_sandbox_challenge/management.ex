@@ -100,9 +100,9 @@ defmodule ApiSandboxChallenge.Management do
       [%Transaction{}, ...]
 
   """
-  def list_transactions!(id) do
+  def list_transactions!(account_id, seed) do
     # Repo.all(Transaction)
-    AccountDataGenerator.all_transactions(id)
+    AccountDataGenerator.all_transactions(account_id, seed)
   end
 
   @doc """
@@ -119,8 +119,8 @@ defmodule ApiSandboxChallenge.Management do
       ** (Ecto.NoResultsError)
 
   """
-  def get_transaction!(id, transaction_id) do
+  def get_transaction!(id, transaction_id, seed) do
     # Repo.get!(Transaction, id)
-    AccountDataGenerator.get_transaction(id, transaction_id)
+    AccountDataGenerator.get_transaction(id, transaction_id, seed)
   end
 end

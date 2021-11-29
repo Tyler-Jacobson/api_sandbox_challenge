@@ -1,7 +1,7 @@
 defmodule ApiSandboxChallenge.DataGenerators.AccountDataGenerator do
 
 
-  def generate_values(seed, index, parent_index, number_of_possible_outcomes, count_needed, processing_function, return_list \\ []) do
+  def generate_values(seed, index, parent_index, number_of_possible_outcomes, count_needed, processing_function, transaction_index \\ 0, return_list \\ []) do
     rotating_primes = [53, 73, 89, 101, 109, 139, 151, 227, 47, 113, 149, 157, 163]
 
     seed_index = rem(index, 9)
@@ -9,7 +9,7 @@ defmodule ApiSandboxChallenge.DataGenerators.AccountDataGenerator do
 
     # gets the integer of the seed(converted to a list) at a specific index, adds it to the index, along with the (parent_index * 13),
     # it then multiplies that output by the selected number from the rotating_primes list
-    base_value = (Enum.at(Integer.digits(seed), seed_index) + index + (parent_index * 13)) * Enum.at(rotating_primes, prime_index)
+    base_value = (Enum.at(Integer.digits(seed), seed_index) + index + (parent_index * 13) + (transaction_index * 7)) * Enum.at(rotating_primes, prime_index)
 
     # the remainder of the above value is taken to create final procedural outputs from the seed
     return_value = rem(base_value, number_of_possible_outcomes)
@@ -28,7 +28,7 @@ defmodule ApiSandboxChallenge.DataGenerators.AccountDataGenerator do
       return_value = processing_function.(return_list)
       %{return_value: return_value, index: index}
     else
-      generate_values(seed, new_index, parent_index, number_of_possible_outcomes, count_needed, processing_function, return_list)
+      generate_values(seed, new_index, parent_index, number_of_possible_outcomes, count_needed, processing_function, transaction_index, return_list)
     end
   end
 
@@ -88,10 +88,7 @@ defmodule ApiSandboxChallenge.DataGenerators.AccountDataGenerator do
 
 
 
-  def generate_id(seed, parent_index) do
-    account_id_generated_values = generate_values(seed, 0, parent_index, 36, 20, &int_list_to_alphanumeric_string/1)
-    _account_id = "acc_#{account_id_generated_values.return_value}"
-  end
+
 
   def generate_account(seed, parent_index) do
     account_id = generate_id(seed, parent_index)
@@ -138,22 +135,6 @@ defmodule ApiSandboxChallenge.DataGenerators.AccountDataGenerator do
     end
   end
 
-  def find_index_by_id(index) do
-    index
-  end
-
-  def find_index_by_id(seed, id, count) do
-    count = count - 1
-
-    found_id = generate_id(seed, count)
-
-    cond do
-      found_id == id -> count
-      count <= 0 -> "No account with id #{id} found"
-      true -> find_index_by_id(seed, id, count)
-    end
-  end
-
   def generate_account_details(account_id, seed, index) do
     account_number = generate_values(seed, 0, index, 10, 11, &list_to_string/1)
     ach = generate_values(seed, account_number.index, index, 10, 9, &list_to_string/1)
@@ -171,6 +152,212 @@ defmodule ApiSandboxChallenge.DataGenerators.AccountDataGenerator do
       }
     }
   end
+
+  def generate_id(seed, parent_index) do
+    account_id_generated_values = generate_values(seed, 0, parent_index, 36, 20, &int_list_to_alphanumeric_string/1)
+    _account_id = "acc_#{account_id_generated_values.return_value}"
+  end
+
+  def find_index_by_id(seed, id, count) do
+    count = count - 1
+
+    found_id = generate_id(seed, count)
+
+    cond do
+      found_id == id -> count
+      count <= 0 -> "No account with id #{id} found"
+      true -> find_index_by_id(seed, id, count)
+    end
+  end
+
+  def find_transaction_index_by_id(account_index, transaction_id, seed, count \\ 90) do
+    count = count - 1
+
+    found_id = generate_transaction_id(seed, count, account_index)
+
+    cond do
+      found_id == transaction_id -> count
+      count <= 0 -> "No transaction with id #{transaction_id} found"
+      true -> find_transaction_index_by_id(account_index, transaction_id, seed, count)
+    end
+  end
+
+  def get_transaction_balance_list() do
+    # calculate transaction amount first, then subtract that from the running balance to get the new running balance
+    # it will be necessary to pass the total between each transaction, it can be returned in the same way that index is returned each time numbers are generated
+  end
+
+  def generate_transaction_id(seed, transaction_index, account_index) do
+    transaction_id_generated_values = generate_values(seed, 20, account_index, 36, 20, &int_list_to_alphanumeric_string/1, transaction_index)
+    _transaction_id = "txn_#{transaction_id_generated_values.return_value}"
+  end
+
+  def generated_values_to_float(index_list) do
+    string_nums = list_to_string(index_list)
+    float_side_one = String.slice(string_nums, 0..-3)
+    float_side_two = String.slice(string_nums, 2..-1)
+    float_string = "#{float_side_one}.#{float_side_two}"
+    _float_string = String.to_float(float_string)
+  end
+
+  def select_merchant(index_list) do
+    merchants = [
+      ["Uber", "transportation"],
+      ["Uber Eats", "dining"],
+      ["Lyft", "transportation"],
+      ["Five Guys", "dining"],
+      ["In-N-Out Burger", "dining"],
+      ["Chick-Fil-A", "dining"],
+      ["AMC Metreon", "entertainment"],
+      ["Apple", "electronics"],
+      ["Amazon", "shopping"],
+      ["Walmart", "shopping"],
+      ["Target", "shopping"],
+      ["Hotel Tonight", "accommodation"],
+      ["Misson Ceviche", "dining"],
+      ["The Creamery", "dining"],
+      ["Caltrain", "transportation"],
+      ["Wingstop", "dining"],
+      ["Slim Chickens", "dining"],
+      ["CVS", "health"],
+      ["Duane Reade", "health"],
+      ["Walgreens", "shopping"],
+      ["Rooster & Rice", "dining"],
+      ["McDonald's", "dining"],
+      ["Burger King", "dining"],
+      ["KFC", "dining"],
+      ["Popeye's", "dining"],
+      ["Shake Shack", "dining"],
+      ["Lowe's", "shopping"],
+      ["The Home Depot", "shopping"],
+      ["Costco", "shopping"],
+      ["Kroger", "shopping"],
+      ["iTunes", "software"],
+      ["Spotify", "entertainment"],
+      ["Best Buy", "electronics"],
+      ["TJ Maxx", "clothing"],
+      ["Aldi", "shopping"],
+      ["Dollar General", "entertainment"],
+      ["Macy's", "clothing"],
+      ["H.E. Butt", "groceries"],
+      ["Dollar Tree", "shopping"],
+      ["Verizon Wireless", "phone"],
+      ["Sprint PCS", "phone"],
+      ["T-Mobile", "phone"],
+      ["Kohl's", "clothing"],
+      ["Starbucks", "dining"],
+      ["7-Eleven", "fuel"],
+      ["AT&T Wireless", "phone"],
+      ["Rite Aid", "health"],
+      ["Nordstrom", "clothing"],
+      ["Ross", "clothing"],
+      ["Gap", "clothing"],
+      ["Bed, Bath & Beyond", "home"],
+      ["J.C. Penney", "clothing"],
+      ["Subway", "dining"],
+      ["O'Reilly", "transport"],
+      ["Wendy's", "dining"],
+      ["Dunkin' Donuts", "dining"],
+      ["Petsmart", "home"],
+      ["Dick's Sporting Goods", "shopping"],
+      ["Sears", "clothing"],
+      ["Staples", "office"],
+      ["Domino's Pizza", "dining"],
+      ["Pizza Hut", "dining"],
+      ["Papa John's", "dining"],
+      ["IKEA", "home"],
+      ["Office Depot", "office"],
+      ["Foot Locker", "clothing"],
+      ["Lids", "clothing"],
+      ["GameStop", "entertainment"],
+      ["Sephora", "shopping"],
+      ["MAC", "shopping"],
+      ["Panera", "dining"],
+      ["Williams-Sonoma", "home"],
+      ["Saks Fifth Avenue", "clothing"],
+      ["Chipotle Mexican Grill", "dining"],
+      ["Exxon Mobil", "fuel"],
+      ["Neiman Marcus", "clothing"],
+      ["Jack In The Box", "dining"],
+      ["Sonic", "dining"],
+      ["Shell", "fuel"]
+    ]
+    selected_index = Enum.at(index_list, 0)
+    Enum.at(merchants, selected_index)
+  end
+
+
+  def generate_transaction(seed, transaction_index, account_id, running_balance) do
+
+    account_index = find_index_by_id(seed, account_id, 4)
+
+    transaction_id = generate_transaction_id(seed, transaction_index, account_index)
+
+    amount_generated_values = generate_values(seed, 20, transaction_index, 9, 4, &generated_values_to_float/1, transaction_index)
+
+    amount = amount_generated_values.return_value
+    running_balance = String.to_float(running_balance) - amount
+    running_balance = running_balance |> Float.ceil(2)
+
+    selected_merchant = generate_values(seed, amount_generated_values.index, transaction_index, 79, 1, &select_merchant/1, transaction_index)
+
+    date = DateTime.add(DateTime.utc_now(), -86400 * transaction_index, :second)
+
+    base_url = ApiSandboxChallengeWeb.Endpoint.url()
+
+
+
+
+    %ApiSandboxChallenge.Management.Transaction{
+      account_id: account_id,
+      amount: "#{amount}",
+      date: "#{date}",
+      description: "#{Enum.at(selected_merchant.return_value, 0)}",
+      details: %{
+        category: "#{Enum.at(selected_merchant.return_value, 1)}",
+        counterparty: %{
+          name: "#{Enum.at(selected_merchant.return_value, 0)}",
+          type: "organization"
+        },
+        processing_status: "complete"
+      },
+      transaction_id: transaction_id,
+      links: %{
+        account: "#{base_url}/accounts/#{account_id}?username=test_token_#{seed}",
+        self: "#{base_url}/accounts/#{account_id}/transactions?username=test_token_#{seed}"
+      },
+      running_balance: "#{running_balance}",
+      status: "posted",
+      type: "ach"
+    }
+  end
+
+  def generate_transactions(seed, account_id, count \\ 90, running_balance \\ "10000.0", transactions_list \\ []) do
+    count = count - 1
+
+    transaction = generate_transaction(seed, count, account_id, running_balance)
+    transactions_list = [transaction | transactions_list]
+
+    running_balance = transaction.running_balance
+
+    if count <= 0 do
+      transactions_list
+    else
+      generate_transactions(seed, account_id, count, running_balance, transactions_list)
+    end
+  end
+
+
+  def get_transaction(account_id, transaction_id, seed) do
+
+    # correct_date will be current date minus seconds_in_day * index
+    # count down index while prepending transactions, same as anything else
+    # this will also make it easier to count a total balance
+    # correct_date = DateTime.add(DateTime.utc_now(), -86400 * 90, :second)
+
+  end
+
+
 
 
   # return all account data for a given seed
@@ -203,102 +390,63 @@ defmodule ApiSandboxChallenge.DataGenerators.AccountDataGenerator do
     }
   end
 
-  def all_transactions(id) do
-    [
-      %ApiSandboxChallenge.Management.Transaction{
-        account_id: "acc_nmfff743stmo5n80t4000",
-        amount: "90.54",
-        date: "2021-08-12",
-        description: "In-N-Out Burger",
-        details: %{
-          category: "dining",
-          counterparty: %{
-            name: "IN N OUT BURGER",
-            type: "organization"
-          },
-          processing_status: "complete"
-        },
-        transaction_id: "txn_nmfo2gtnstmo5n80t4004",
-        links: %{
-          account: "https://api.teller.io/accounts/acc_nmfff743stmo5n80t4000",
-          self:
-            "https://api.teller.io/accounts/acc_nmfff743stmo5n80t4000/transactions/txn_nmfo2gtnstmo5n80t4004"
-        },
-        running_balance: "33648.09",
-        status: "posted",
-        type: "ach"
-      },
-      %ApiSandboxChallenge.Management.Transaction{
-        account_id: "acc_nmfff743stmo5n80t4000",
-        amount: "50.50",
-        date: "2021-08-11",
-        description: "Uber",
-        details: %{
-          category: "dining",
-          counterparty: %{
-            name: "Uber",
-            type: "organization"
-          },
-          processing_status: "complete"
-        },
-        transaction_id: "txn_nmfo2gtnstmo5n80t4004",
-        links: %{
-          account: "https://api.teller.io/accounts/acc_nmfff743stmo5n80t4000",
-          self:
-            "https://api.teller.io/accounts/acc_nmfff743stmo5n80t4000/transactions/txn_nmfo2gtnstmo5n80t4004"
-        },
-        running_balance: "33648.09",
-        status: "posted",
-        type: "ach"
-      }
-    ]
+  def all_transactions(account_id, seed) do
+    generate_transactions(seed, account_id)
+
+
+    # [
+    #   %ApiSandboxChallenge.Management.Transaction{
+    #     account_id: "acc_nmfff743stmo5n80t4000",
+    #     amount: "90.54",
+    #     date: "2021-08-12",
+    #     description: "In-N-Out Burger",
+    #     details: %{
+    #       category: "#{seed}",
+    #       counterparty: %{
+    #         name: "IN N OUT BURGER",
+    #         type: "organization"
+    #       },
+    #       processing_status: "complete"
+    #     },
+    #     transaction_id: "txn_nmfo2gtnstmo5n80t4004",
+    #     links: %{
+    #       account: "https://api.teller.io/accounts/acc_nmfff743stmo5n80t4000",
+    #       self:
+    #         "https://api.teller.io/accounts/acc_nmfff743stmo5n80t4000/transactions/txn_nmfo2gtnstmo5n80t4004"
+    #     },
+    #     running_balance: "33648.09",
+    #     status: "posted",
+    #     type: "ach"
+    #   },
+    #   %ApiSandboxChallenge.Management.Transaction{
+    #     account_id: "acc_nmfff743stmo5n80t4000",
+    #     amount: "50.50",
+    #     date: "2021-08-11",
+    #     description: "Uber",
+    #     details: %{
+    #       category: "dining",
+    #       counterparty: %{
+    #         name: "Uber",
+    #         type: "organization"
+    #       },
+    #       processing_status: "complete"
+    #     },
+    #     transaction_id: "txn_nmfo2gtnstmo5n80t4004",
+    #     links: %{
+    #       account: "https://api.teller.io/accounts/acc_nmfff743stmo5n80t4000",
+    #       self:
+    #         "https://api.teller.io/accounts/acc_nmfff743stmo5n80t4000/transactions/txn_nmfo2gtnstmo5n80t4004"
+    #     },
+    #     running_balance: "33648.09",
+    #     status: "posted",
+    #     type: "ach"
+    #   }
+    # ]
   end
 
 
-  def get_transaction_index_by_id(account_id, transaction_id, seed) do
-
-  end
-
-  def get_transaction_balance_list() do
-    # calculate transaction amount first, then subtract that from the running balance to get the new running balance
-    # it will be necessary to pass the total between each transaction, it can be returned in the same way that index is returned each time numbers are generated
-  end
-
-  def get_transaction(account_id, transaction_id) do
-
-    # correct_date will be current date minus seconds_in_day * index
-    # count down index while prepending transactions, same as anything else
-    # this will also make it easier to count a total balance
-    # correct_date = DateTime.add(DateTime.utc_now(), -86400 * 90, :second)
-    yesterday = DateTime.add(DateTime.utc_now(), -86400 * 90, :second)
-
-    test = DateTime.utc_now()
-    # x = :calendar.universal_time()
 
 
-    %ApiSandboxChallenge.Management.Transaction{
-      account_id: account_id,
-      amount: "50.50",
-      date: "#{yesterday}",
-      description: "Uber",
-      details: %{
-        category: "dining",
-        counterparty: %{
-          name: "Uber",
-          type: "organization"
-        },
-        processing_status: "complete"
-      },
-      transaction_id: "txn_nmfo2gtnstmo5n80t4004",
-      links: %{
-        account: "https://api.teller.io/accounts/acc_nmfff743stmo5n80t4000",
-        self:
-          "https://api.teller.io/accounts/acc_nmfff743stmo5n80t4000/transactions/txn_nmfo2gtnstmo5n80t4004"
-      },
-      running_balance: "33648.09",
-      status: "posted",
-      type: "ach"
-    }
-  end
+
 
 end
