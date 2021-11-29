@@ -18,7 +18,6 @@ defmodule ApiSandboxChallengeWeb.TransactionView do
       date: transaction.date,
       description: transaction.description,
       details: transaction.details,
-      id: transaction.id,
       links: transaction.links,
       running_balance: transaction.running_balance,
       status: transaction.status,
