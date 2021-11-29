@@ -9,7 +9,9 @@ defmodule ApiSandboxChallenge.Management do
   alias ApiSandboxChallenge.Management.Account
 
   alias ApiSandboxChallenge.DataGenerators.AccountGenerators
-
+  alias ApiSandboxChallenge.DataGenerators.AccountDetailGenerators
+  alias ApiSandboxChallenge.DataGenerators.AccountBalanceGenerators
+  alias ApiSandboxChallenge.DataGenerators.AccountTransactionGenerators
 
   def parse_token(token) do
     split_token = String.split(token, "_")
@@ -65,7 +67,7 @@ defmodule ApiSandboxChallenge.Management do
 
   """
   def get_account_detail!(account_id, seed) do
-    AccountGenerators.get_account_details(seed, account_id)
+    AccountDetailGenerators.get_account_details(seed, account_id)
   end
 
   @doc """
@@ -83,7 +85,7 @@ defmodule ApiSandboxChallenge.Management do
 
   """
   def get_balance!(account_id, seed) do
-    AccountGenerators.get_balance_details(seed, account_id)
+    AccountBalanceGenerators.get_balance_details(seed, account_id)
   end
 
   @doc """
@@ -96,7 +98,7 @@ defmodule ApiSandboxChallenge.Management do
 
   """
   def list_transactions!(seed, account_id) do
-    AccountGenerators.all_transactions(account_id, seed)
+    AccountTransactionGenerators.all_transactions(account_id, seed)
   end
 
   @doc """
@@ -114,6 +116,6 @@ defmodule ApiSandboxChallenge.Management do
 
   """
   def get_transaction!(id, transaction_id, seed) do
-    AccountGenerators.get_transaction(seed, id, transaction_id)
+    AccountTransactionGenerators.get_transaction(seed, id, transaction_id)
   end
 end
