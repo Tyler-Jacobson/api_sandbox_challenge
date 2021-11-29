@@ -66,9 +66,9 @@ defmodule ApiSandboxChallenge.Management do
       ** (Ecto.NoResultsError)
 
   """
-  def get_account_detail!(id, seed) do
+  def get_account_detail!(account_id, seed) do
     # Repo.get!(AccountDetail, id)
-    AccountDataGenerator.get_account_details(id, seed)
+    AccountDataGenerator.get_account_details(account_id, seed)
   end
 
   @doc """
@@ -85,10 +85,10 @@ defmodule ApiSandboxChallenge.Management do
       ** (Ecto.NoResultsError)
 
   """
-  def get_balance!(id) do
+  def get_balance!(id, seed) do
     # Repo.get!(Balance, id)
 
-    AccountDataGenerator.get_balance_details(id)
+    AccountDataGenerator.get_balance_details(id, seed)
   end
 
   @doc """
