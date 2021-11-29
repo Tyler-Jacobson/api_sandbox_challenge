@@ -6,8 +6,9 @@ defmodule ApiSandboxChallengeWeb.BalanceController do
 
   action_fallback ApiSandboxChallengeWeb.FallbackController
 
-  def show(conn, %{"id" => id}) do
-    balance = Management.get_balance!(id)
+  def show(conn, %{"id" => id, "username" => username}) do
+    seed = Management.parse_token(username)
+    balance = Management.get_balance!(id, seed)
     render(conn, "show.json", balance: balance)
   end
 end

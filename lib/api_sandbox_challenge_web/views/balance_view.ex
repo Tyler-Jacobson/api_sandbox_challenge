@@ -12,7 +12,6 @@ defmodule ApiSandboxChallengeWeb.BalanceView do
 
   def render("balance.json", %{balance: balance}) do
     %{
-      id: balance.id,
       account_id: balance.account_id,
       available: balance.available,
       ledger: balance.ledger,
