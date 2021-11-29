@@ -13,11 +13,7 @@ defmodule ApiSandboxChallenge.Management do
   alias ApiSandboxChallenge.DataGenerators.AccountBalanceGenerators
   alias ApiSandboxChallenge.DataGenerators.AccountTransactionGenerators
 
-  def parse_token(token) do
-    split_token = String.split(token, "_")
-    seed = Enum.at(split_token, 2)
-    String.to_integer(seed)
-  end
+
   @doc """
   Returns the list of accounts.
 
