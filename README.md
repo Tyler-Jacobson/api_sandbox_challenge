@@ -25,6 +25,6 @@ http://localhost:4000/accounts/acc_98ligqgnowb0bd3v0brq?username=test_token_7326
 
 
 
-(besides learning Elixir and Phoenix)
 
-A lot of the work for this project was spent on building a procedural generator from scratch that was capable of returning consistent yet varied results.
+
+A lot of the work for this project was spent on building a procedural generator from scratch that was capable of returning consistent yet highly varied results, and connecting that to the required functions needed to seed each piece of data on the final endpoints.
