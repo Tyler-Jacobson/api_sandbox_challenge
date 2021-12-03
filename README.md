@@ -4,7 +4,7 @@
   * Install dependencies with `mix deps.get`
   * Start Phoenix endpoint with `mix phx.server`
 
-Now you can visit [`localhost:4000/accounts/?username=test_token_347264212`](http://localhost:4000/accounts/?username=test_token_347264212) from your browser
+Now you can visit [`localhost:4000/accounts/?username=test_token_732645231`](http://localhost:4000/accounts/?username=test_token_732645231) from your browser
 
 ## Url Structure
 
@@ -13,8 +13,6 @@ Url Structure is (baseurl) / (endpoint) / (token)
 (localhost:4000) / (accounts) / (?username=test_token_732645231)
 
 The token value can be any 9 digit integer that does not start with 0
-
-It should be possible to navigate the app using the returned links from each endpoint
 
 ## Urls for example token 732645231
 
@@ -62,12 +60,18 @@ In addition to the above, changes were naturally made to the data flow through `
 
 ## Notes
 
-I started learning Elixir just over a week ago. I think what you guys are doing is super cool, and I really want to work with you. Try to go easy on me :)
+I know that I may not be the top performer in terms of actual project results. I hope the fact that I started learning Elixir just over a week ago, and have been simultaneously learning the language, the Phoenix framework, and completing the specific requirements of the challenge; along with the fact that I was able to come this far, this quickly will go to my credit. I really put 100% effort into this. Not just the project, but trying to get a proper understanding of the language and framework as well. It's something I am genuinely interested in, and plan to continue pursuing. I'm very interested in what you guys are doing, and I really do want to join your team. 
 
-## Given more time...
+The app is currently working, with all endpoints fully functional, but without authentication or tests. Tim and I agreed that at this point, I had already put a good deal more time than intended into the project in order to learn the fundamentals of the language and framework, and that the current state should hopefully be sufficient to determine if I am a good fit for the company.
+
+I've learned a ton from doing this, and I hope that I can go on to learn a lot from you guys in the future.
+
+## Given more time
 
 There are four major areas I would focus on provided I had more time to commit to this project. 
- - HTTP Basic Auth - Ideally the API would be generating tokens itself and sending them to the users, then authenticating against sent tokens (or possible tokens if the API is to be truly stateless).
+ - HTTP Basic Auth - Ideally the API would be generating tokens itself and sending them to the users, then authenticating against sent tokens.
  - Testing - Full suite of tests is of course very important, especially to prevent regression and unforeseen bugs.
  - Better Error Handling - Malformed requests currently send the user to a crash screen, which is not ideal for UX or security reasons. It would be much better to return a properly formatted error, with suggestions to help the user fix issues.
- - Money library - Floats are not perfectly precise, and not really suited to handle money, balances, or transactions. It would be much better to use a more advanced tool for this.
+ - Money library - Floats are not perfectly precise, and not really suited to handle money, balances, or transactions. It would be much better to use a more advanced tool for money manipulation.
+
+
