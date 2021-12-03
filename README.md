@@ -8,9 +8,9 @@ Now you can visit [`localhost:4000/accounts/?username=test_token_347264212`](htt
 
 ## Url Structure
 
-Url Structure is (baseurl/) (endpoint/) (token)
+Url Structure is (baseurl) / (endpoint) / (token)
 
-(localhost:4000/) (accounts/) (?username=test_token_732645231)
+(localhost:4000) / (accounts) / (?username=test_token_732645231)
 
 The token value can be any 9 digit integer that does not start with 0
 
