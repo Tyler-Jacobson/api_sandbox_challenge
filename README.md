@@ -63,3 +63,11 @@ In addition to the above, changes were naturally made to the data flow through r
 ## Notes
 
 I started learning Elixir just over a week ago. I think what you guys are doing is super cool, and I really want to work with you. Try go easy on me :)
+
+## Given more time...
+
+There are four major areas I would focus on provided I had more time to commit to this project. 
+ - HTTP Basic Auth - Ideally the API would be generating tokens itself and sending them to the users.
+ - Testing - Full suite of tests is of course very important, especially to prevent regression and unforseen bugs.
+ - Better Error Handling - Malformed requests currently send the user to a crash screen, which is not ideal for UX or security reasons. It would be much better to return a properly formatted error, with suggestions to help the user fix issues.
+ - Money library - Floats are not perfectly precise, and not really suited to handle money, balances, or transactions. It would be much better to use more advanced tools for this.
