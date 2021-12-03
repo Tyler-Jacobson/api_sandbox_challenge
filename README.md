@@ -38,9 +38,13 @@ http://localhost:4000/accounts/acc_98ligqgnowb0bd3v0brq/transactions/txn_7sua7j0
 
 The number of accounts generated is procedural, and on a range of 1-4
 
-Here are some additional token values you can test with, altough any 9 digit number will work
+Here are some additional token values for you to test with, altough any 9 digit number will work
 
+http://localhost:4000/accounts/?username=test_token_321909729
 
+http://localhost:4000/accounts/?username=test_token_206259766
+
+http://localhost:4000/accounts/?username=test_token_111111111
 
 
 ## Technical
@@ -51,14 +55,11 @@ Said generator recieves a function as an argument, which is then used to process
 
 All of the code for these data generators and parsers can be found in lib/api_sandbox_challenge/data_generators/, and the central generator function can be found at lib/api_sandbox_challenge/data_generators/global_generators generate_values/8
 
-In addition to the above, changes were naturally made to the data flow through router -> controllers -> context / view
-
-
+In addition to the above, changes were naturally made to the data flow through router -> controllers -> views / context(named 'Management')
 
 ## Notes
 
-
-I started learning this stuff just over a week ago. I think what you guys are doing is super cool, and I really want to work with you. Try go easy on me :)
+I started learning Elixir just over a week ago. I think what you guys are doing is super cool, and I really want to work with you. Try go easy on me :)
 
 
 
