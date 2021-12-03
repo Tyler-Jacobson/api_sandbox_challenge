@@ -47,7 +47,7 @@ Here are some additional token values you can test with, altough any 9 digit num
 
 A lot of the work for this project was spent on building and refining a procedural generator that was capable of returning consistent yet highly varied results, all while generating unique data across a long list of identical objects (mainly the transactions list).
 
-Said generator recieves a function as an argument, which is then used to process the generated values into final states.
+Said generator recieves a function as an argument, which is then used to process the generated values into final states before being added to the json object for output
 
 All of the code for these data generators and parsers can be found in lib/api_sandbox_challenge/data_generators/, and the central generator function can be found at lib/api_sandbox_challenge/data_generators/global_generators generate_values/8
 
