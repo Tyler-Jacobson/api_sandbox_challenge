@@ -70,4 +70,4 @@ There are four major areas I would focus on provided I had more time to commit t
  - HTTP Basic Auth - Ideally the API would be generating tokens itself and sending them to the users.
  - Testing - Full suite of tests is of course very important, especially to prevent regression and unforseen bugs.
  - Better Error Handling - Malformed requests currently send the user to a crash screen, which is not ideal for UX or security reasons. It would be much better to return a properly formatted error, with suggestions to help the user fix issues.
- - Money library - Floats are not perfectly precise, and not really suited to handle money, balances, or transactions. It would be much better to use more advanced tools.
+ - Money library - Floats are not perfectly precise, and not really suited to handle money, balances, or transactions. It would be much better to use a more advanced tool for this.
