@@ -56,12 +56,10 @@ A lot of the work for this project was spent on building and refining a procedur
 
 Said generator recieves a function as an argument, which is then used to process the generated values into final states before being added to the json object for output
 
-All of the code for these data generators and parsers can be found in lib/api_sandbox_challenge/data_generators/, and the central generator function, which powers everything else can be found at lib/api_sandbox_challenge/data_generators/global_generators generate_values/8
+All of the code for these data generators and parsers can be found in ```lib/api_sandbox_challenge/data_generators/```, and the central generator function, which powers everything else can be found at ```lib/api_sandbox_challenge/data_generators/global_generators generate_values/8```
 
 In addition to the above, changes were naturally made to the data flow through router -> controllers -> views / context(context is named 'Management')
 
 ## Notes
 
 I started learning Elixir just over a week ago. I think what you guys are doing is super cool, and I really want to work with you. Try go easy on me :)
-
-
