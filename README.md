@@ -36,9 +36,12 @@ http://localhost:4000/accounts/acc_98ligqgnowb0bd3v0brq/transactions?username=te
 Single transaction from a single account
 http://localhost:4000/accounts/acc_98ligqgnowb0bd3v0brq/transactions/txn_7sua7j0g9534xl8kt5mj?username=test_token_732645231
 
+
+## Additional Tokens
+
 The number of accounts generated is procedural, and on a range of 1-4
 
-Here are some additional token values for you to test with, altough any 9 digit number will work
+Here are some additional tokens for you to test with, altough any 9 digit number will function as a token value
 
 http://localhost:4000/accounts/?username=test_token_321909729
 
