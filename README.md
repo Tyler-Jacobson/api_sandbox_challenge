@@ -58,14 +58,6 @@ All of the code for these data generators and parsers can be found in ```lib/api
 
 In addition to the above, changes were naturally made to the data flow through ```router -> controllers -> views / context```(context is named 'Management')
 
-## Notes
-
-I know that I may not be the top performer in terms of actual project results. I hope the fact that I started learning Elixir just over a week ago, and have been simultaneously learning the language, the Phoenix framework, and completing the specific requirements of the challenge; along with the fact that I was able to come this far, this quickly will go to my credit. I really put 100% effort into this. Not just the project, but trying to get a proper understanding of the language and framework as well. It's something I am genuinely interested in, and plan to continue pursuing. I'm very interested in what you guys are doing, and I really do want to join your team. 
-
-The app is currently working, with all endpoints fully functional, but without authentication or tests. Tim and I agreed that at this point, I had already put a good deal more time than intended into the project in order to learn the fundamentals of the language and framework, and that the current state should hopefully be sufficient to determine if I am a good fit for the company.
-
-I've learned a ton from doing this, and I hope that I can go on to learn a lot from you guys in the future.
-
 ## Given more time
 
 There are four major areas I would focus on provided I had more time to commit to this project. 
